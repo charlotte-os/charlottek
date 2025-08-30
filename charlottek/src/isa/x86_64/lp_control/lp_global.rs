@@ -1,18 +1,17 @@
-use core::ops::DerefMut;
-use core::ptr::NonNull;
+use alloc::boxed::Box;
+use core::mem::MaybeUninit;
 
-use crate::process_mgmt::{PROCESS_TABLE, Process};
-use crate::threading::thread::ThreadGuid;
+use crate::threading::scheduler::LpLocalScheduler;
 
-/* This structure contains the global data for the current logical processor */
-struct LpGlobal {
-    usr_thread: Option<ThreadGuid>,
+/* This structure contains the global data for each logical processor */
+struct GsSegment {
+    local_sched: MaybeUninit<Box<dyn LpLocalScheduler>>,
 }
 
-impl LpGlobal {
+impl GsSegment {
     pub fn new() -> Self {
-        LpGlobal {
-            usr_thread: None,
+        GsSegment {
+            local_sched: MaybeUninit::uninit(),
         }
     }
 }
