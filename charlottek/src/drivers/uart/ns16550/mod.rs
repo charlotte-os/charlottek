@@ -71,7 +71,7 @@ impl Uart for Uart16550 {
 
     fn try_new(base: IoReg8) -> Result<Self, Error> {
         let port = Uart16550 {
-            base: base,
+            base,
         };
         (port.base + 1).write(0x00); // Disable all interrupts
         (port.base + 3).write(0x80); // Enable DLAB (set baud rate divisor)
