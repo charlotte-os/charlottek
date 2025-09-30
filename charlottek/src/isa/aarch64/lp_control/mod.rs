@@ -1,27 +1,22 @@
 use crate::isa::interface::lp;
 
-pub struct LpControl;
+type LpId = u32;
 
-impl LpControlIfce for LpControl {
-    #[inline(always)]
-    fn halt() -> ! {
-        unsafe {
-            core::arch::asm!("wfi");
-        }
-        loop {}
+macro_rules! halt {
+    unsafe {
+        core::arch::asm!("wfi");
     }
+    loop {}
+}
 
-    #[inline(always)]
-    fn mask_interrupts() {
-        unsafe {
-            core::arch::asm!("cpsid i");
-        }
+macro_rules! mask_interrupts {
+    unsafe {
+        core::arch::asm!("cpsid i");
     }
+}
 
-    #[inline(always)]
-    fn unmask_interrupts() {
-        unsafe {
-            core::arch::asm!("cpsie i");
-        }
+macro_rules! unmask_interrupts {
+    unsafe {
+        core::arch::asm!("cpsie i");
     }
 }
