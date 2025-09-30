@@ -59,7 +59,7 @@ macro_rules! get_lic_id {
 #[rustfmt::skip]
 pub use get_lic_id;
 
-use core::arch::{asm, naked_asm};
+use core::arch::asm;
 
 use super::LpId;
 

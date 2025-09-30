@@ -119,26 +119,23 @@ impl Gdt {
     }
 }
 
-core::arch::global_asm!(
-    ".global reload_segment_regs",
-    "reload_segment_regs:",
-    "movzx rax, word ptr [rip + KERNEL_CODE_SELECTOR]",
-    "push rax",
-    "lea rax, [rip + reload_cs]",
-    "push rax",
-    "retfq",
-    "reload_cs:",
-    "mov ax, [rip + KERNEL_DATA_SELECTOR]",
-    "mov ds, ax",
-    "mov es, ax",
-    "mov fs, ax",
-    "mov gs, ax",
-    "mov ss, ax",
-    "ret"
-);
-
-unsafe extern "C" {
-    pub fn reload_segment_regs();
+#[unsafe(naked)]
+pub extern "C" fn reload_segment_regs() {
+    naked_asm!(
+        "movzx rax, word ptr [rip + KERNEL_CODE_SELECTOR]",
+        "push rax",
+        "lea rax, [rip + reload_cs]",
+        "push rax",
+        "retfq",
+        "reload_cs:",
+        "mov ax, [rip + KERNEL_DATA_SELECTOR]",
+        "mov ds, ax",
+        "mov es, ax",
+        "mov fs, ax",
+        "mov gs, ax",
+        "mov ss, ax",
+        "ret"
+    )
 }
 
 #[repr(C, packed(1))]

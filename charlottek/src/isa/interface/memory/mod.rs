@@ -9,8 +9,10 @@ pub trait MemoryInterface {
     type VAddr: address::VirtualAddress;
     type PAddr: address::PhysicalAddress;
     type Error;
+    type HwAsid;
     type AddressSpace: AddressSpaceInterface;
 
+    const HW_ASID_MAX: Self::HwAsid;
     const PAGE_SIZE: usize;
 }
 

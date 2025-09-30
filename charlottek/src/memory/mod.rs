@@ -12,16 +12,16 @@ pub use crate::isa::memory::paging::AddressSpace;
 pub use crate::klib::collections::id_table::IdTable;
 
 pub type AddressSpaceId = usize;
+type AddressSpaceTable = IdTable<AddressSpaceId, AddressSpace>;
 
 pub const KERNEL_ASID: AddressSpaceId = 0;
-type AddressSpaceTable = IdTable<AddressSpaceId, AddressSpace>;
-pub static ADDRESS_SPACE_TABLE: Lazy<AddressSpaceTable> = Lazy::new(|| AddressSpaceTable::new());
 
+pub static ADDRESS_SPACE_TABLE: Lazy<AddressSpaceTable> = Lazy::new(|| AddressSpaceTable::new());
 pub static HHDM_BASE: Lazy<VAddr> = Lazy::new(|| {
     VAddr::from(
         HHDM_REQUEST
             .get_response()
-            .expect("Limine failed to provide a higher half direct mapping region.")
+            .expect("Limine failed to provide a direct mapping region.")
             .offset() as usize,
     )
 });

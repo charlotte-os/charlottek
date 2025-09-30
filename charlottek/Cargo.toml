@@ -21,6 +21,7 @@ spinning_top = {version = "*"}
 sha_256 = { version = ">=1.0.1" }
 talc = { version = ">=4.4.3" }
 
+
 [profile.dev]
 debug = "full"
 debug-assertions = true

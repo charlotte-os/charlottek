@@ -1,4 +1,3 @@
-use core::arch::naked_asm;
 use core::mem::offset_of;
 
 #[derive(Debug, Clone, Default)]

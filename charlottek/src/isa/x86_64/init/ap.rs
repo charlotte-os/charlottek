@@ -1,12 +1,10 @@
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 
-use spin::Mutex;
 use spin::lazy::Lazy;
 
 use super::{INTERRUPT_STACK_SIZE, gdt};
 use crate::cpu::multiprocessor::get_lp_count;
-use crate::isa::init::gdt::Gdt;
 use crate::isa::lp::ops::get_lp_id;
 use crate::logln;
 
@@ -85,9 +83,7 @@ pub fn init_ap() {
     logln!("LP{}: LP index is {}.", lp_id, ap_index);
     crate::logln!("LP{}: Initializing TSS, GDT, and IDT", lp_id);
     AP_GDTS[ap_index].load();
-    unsafe {
-        gdt::reload_segment_regs();
-    }
+    gdt::reload_segment_regs();
     AP_IDTS[ap_index].load();
     crate::logln!("AP{}: x86-64 logical processor initialization complete", lp_id);
 }

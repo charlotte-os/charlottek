@@ -1,18 +1,15 @@
 pub mod pte;
 pub mod pth_walker;
 
-use alloc::collections::btree_map::BTreeMap;
 use core::arch::asm;
 use core::iter::Iterator;
 use core::ptr::NonNull;
-
-use spin::Mutex;
 
 use super::MemoryInterfaceImpl;
 use super::address::vaddr::VAddr;
 use crate::isa::interface::memory::{AddressSpaceInterface, MemoryInterface, MemoryMapping};
 use crate::logln;
-use crate::memory::{AddressSpaceId, PAddr};
+use crate::memory::PAddr;
 
 pub const PAGE_SIZE: usize = 4096;
 pub const N_PAGE_TABLE_ENTRIES: usize = 512;

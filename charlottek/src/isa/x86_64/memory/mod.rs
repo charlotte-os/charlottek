@@ -35,13 +35,16 @@ impl From<VMemError> for Error {
         Error::VMemError(err)
     }
 }
+
 pub struct MemoryInterfaceImpl;
 
 impl MemoryInterface for MemoryInterfaceImpl {
     type AddressSpace = paging::AddressSpace;
     type Error = Error;
+    type HwAsid = u16;
     type PAddr = address::paddr::PAddr;
     type VAddr = address::vaddr::VAddr;
 
+    const HW_ASID_MAX: Self::HwAsid = (1 << 12) - 1;
     const PAGE_SIZE: usize = paging::PAGE_SIZE;
 }
