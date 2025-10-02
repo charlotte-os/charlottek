@@ -1,21 +1,12 @@
-//! # x86_64 Logical Processor Control Interface
+//! # Logical Processor Control Interface
 
-pub trait CoreStateIfce {
-    extern "C" fn save(&mut self);
-    extern "C" fn load(&self);
+pub trait LpControlIfce {
+    type LicId;
+    type LpId;
+
+    fn halt() -> !;
+    fn mask_interrupts();
+    fn unmask_interrupts();
+    fn curr_lic_id() -> Self::LicId;
+    fn curr_lp_id() -> Self::LpId;
 }
-
-/*
- * The following macros are used to logical processor operations in assembly and
- * must be defined in each architecture module.
- *
- * halt!() halts the current logical processor.
- * mask_interrupts!() disables interrupts on the current logical processor.
- * unmask_interrupts!() enables interrupts on the current logical processor.
- * curr_lic_id!() evaluates to the ID of the current local interrupt controller.
- * curr_lp_id!() evaluates to the ID of the current logical processor.
- * The following type aliases must also be defined:
- * LpId: The type used for logical processor IDs.
- *
- * See the x86_64 implementation for examples.
- */

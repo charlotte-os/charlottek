@@ -8,7 +8,7 @@ use hashbrown::HashSet;
 use spin::{Lazy, Mutex, RwLock};
 
 use crate::cpu::threads::{Thread, ThreadId};
-use crate::isa::lp::ops::get_lp_id;
+use crate::isa::lp::LpControl;
 use crate::memory::AddressSpaceId;
 
 pub static GLOBAL_SCHEDULER: Lazy<GlobalScheduler> = Lazy::new(GlobalScheduler::new);
@@ -29,7 +29,7 @@ impl GlobalScheduler {
     }
 
     pub fn get_local_lp_scheduler(&self) -> &Mutex<Box<dyn LpScheduler>> {
-        &self.lp_schedulers[get_lp_id!() as usize]
+        &self.lp_schedulers[LpControl::get_lp_id() as usize]
     }
 }
 

@@ -1,8 +1,8 @@
 use alloc::vec::Vec;
 
 use crate::cpu::threads::{Thread, ThreadId};
+use crate::isa::lp::LpControl;
 use crate::memory::AddressSpaceId;
-use crate::isa::lp::
 
 pub trait LpScheduler {
     extern "C" fn advance(&self);
@@ -16,8 +16,4 @@ pub trait LpScheduler {
     fn abort_as_all(&mut self, asid: AddressSpaceId);
 
     fn asid_to_pcid(&self, asid: AddressSpaceId) -> Option<u16>;
-}
-
-struct HwAsidMapper {
-    map:
 }

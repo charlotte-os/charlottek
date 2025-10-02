@@ -4,3 +4,4 @@
 //! defined in the interface module.
 
 pub mod io;
+pub mod lp;

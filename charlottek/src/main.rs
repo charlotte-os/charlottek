@@ -41,6 +41,7 @@ pub mod self_test;
 
 use cpu::multiprocessor;
 use isa::interface::system_info::CpuInfoIfce;
+use isa::lp::LpControl;
 use isa::system_info::CpuInfo;
 use limine::mp::Cpu;
 use spin::{Barrier, Lazy};
@@ -79,7 +80,7 @@ pub extern "C" fn bsp_main() -> ! {
     logln!("Physical Address bits implemented: {}", (CpuInfo::get_paddr_sig_bits()));
     logln!("Virtual Address bits implemented: {}", (CpuInfo::get_vaddr_sig_bits()));
     logln!("Nothing left to do. Waiting for interrupts...");
-    halt!()
+    LpControl::halt()
 }
 /// This is the application processor's entry point into the kernel. The `ap_main` function is
 /// called by each application processor upon entering the kernel. It initializes the processor and
@@ -92,6 +93,6 @@ pub unsafe extern "C" fn ap_main(_cpuinfo: &Cpu) -> ! {
     }
     init::ap_init();
     INIT_BARRIER.wait();
-    logln!("LP{}: Nothing left to do. Waiting for interrupts...", (get_lp_id!()));
-    halt!()
+    logln!("LP{}: Nothing left to do. Waiting for interrupts...", (LpControl::get_lp_id()));
+    LpControl::halt()
 }
