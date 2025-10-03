@@ -36,9 +36,9 @@ impl From<VMemError> for Error {
     }
 }
 
-pub struct MemoryIfceImpl;
+pub struct Memory;
 
-impl MemoryIfce for MemoryIfceImpl {
+impl MemoryIfce for Memory {
     type AddressSpace = paging::AddressSpace;
     type Error = Error;
     type HwAsid = u16;

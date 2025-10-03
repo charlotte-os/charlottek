@@ -1,12 +1,12 @@
 use core::arch::asm;
 
-use crate::isa::interface::lp::LpControlIfce;
+use crate::isa::interface::lp::LpIfce;
 
 pub mod thread_context;
 
 pub struct LogicalProcessor;
 
-impl LpControlIfce for LogicalProcessor {
+impl LpIfce for LogicalProcessor {
     // MSR 0x802 value
     type LicId = u32;
     // TSC_AUX value

@@ -1,4 +1,4 @@
-use crate::isa::init::IsaInitializer;
+use crate::isa::init::Init;
 use crate::isa::interface::init::InitIfce;
 use crate::isa::lp;
 use crate::logln;
@@ -6,7 +6,7 @@ use crate::memory::PHYSICAL_FRAME_ALLOCATOR;
 
 pub fn bsp_init() {
     logln!("Performing ISA specific initialization...");
-    match IsaInitializer::init_bsp() {
+    match Init::init_bsp() {
         Ok(_) => logln!("ISA specific initialization complete."),
         Err(e) => {
             // initialization failure is irrecoverable
@@ -39,7 +39,7 @@ pub fn ap_init() {
     let lp_id = lp::LogicalProcessor::get_lp_id();
     logln!("Initializing LP {}...", lp_id);
     logln!("LP {}: Performing ISA specific initialization...", lp_id);
-    match IsaInitializer::init_ap() {
+    match Init::init_ap() {
         Ok(_) => logln!("LP {}: ISA specific initialization complete.", lp_id),
         Err(e) => {
             // initialization failure is irrecoverable

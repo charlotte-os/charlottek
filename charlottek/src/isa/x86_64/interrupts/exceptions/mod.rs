@@ -1,60 +1,32 @@
-use crate::isa::init::gdt;
-use crate::isa::interrupts::idt::Idt;
 use crate::logln;
-
-pub fn load_exceptions(idt: &mut Idt) {
-    idt.set_gate(0, isr_divide_by_zero, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(1, isr_debug, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(2, isr_non_maskable_interrupt, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(3, isr_breakpoint, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(4, isr_overflow, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(5, isr_bound_range_exceeded, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(6, isr_invalid_opcode, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(7, isr_device_not_available, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(8, isr_double_fault, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(10, isr_invalid_tss, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(11, isr_segment_not_present, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(12, isr_stack_segment_fault, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(13, isr_general_protection_fault, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(14, isr_page_fault, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(16, isr_x87_floating_point, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(17, isr_alignment_check, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(18, isr_machine_check, gdt::KERNEL_CODE_SELECTOR, true, true);
-    idt.set_gate(19, isr_simd_floating_point, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(20, isr_virtualization, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(21, isr_control_protection, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(28, isr_hypervisor_injection, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(29, isr_vmm_communication, gdt::KERNEL_CODE_SELECTOR, true, false);
-    idt.set_gate(30, isr_security_exception, gdt::KERNEL_CODE_SELECTOR, true, false);
-}
 
 core::arch::global_asm! {
     include_str!("exceptions.asm"),
 }
 unsafe extern "C" {
-    fn isr_divide_by_zero();
-    fn isr_debug();
-    fn isr_non_maskable_interrupt();
-    fn isr_breakpoint();
-    fn isr_overflow();
-    fn isr_bound_range_exceeded();
-    fn isr_invalid_opcode();
-    fn isr_device_not_available();
-    fn isr_double_fault();
-    fn isr_invalid_tss();
-    fn isr_stack_segment_fault();
-    fn isr_general_protection_fault();
-    fn isr_segment_not_present();
-    fn isr_page_fault();
-    fn isr_x87_floating_point();
-    fn isr_alignment_check();
-    fn isr_machine_check();
-    fn isr_simd_floating_point();
-    fn isr_virtualization();
-    fn isr_control_protection();
-    fn isr_hypervisor_injection();
-    fn isr_vmm_communication();
-    fn isr_security_exception();
+    pub fn isr_divide_by_zero();
+    pub fn isr_debug();
+    pub fn isr_non_maskable_interrupt();
+    pub fn isr_breakpoint();
+    pub fn isr_overflow();
+    pub fn isr_bound_range_exceeded();
+    pub fn isr_invalid_opcode();
+    pub fn isr_device_not_available();
+    pub fn isr_double_fault();
+    pub fn isr_invalid_tss();
+    pub fn isr_stack_segment_fault();
+    pub fn isr_general_protection_fault();
+    pub fn isr_segment_not_present();
+    pub fn isr_page_fault();
+    pub fn isr_x87_floating_point();
+    pub fn isr_alignment_check();
+    pub fn isr_machine_check();
+    pub fn isr_simd_floating_point();
+    pub fn isr_virtualization();
+    pub fn isr_control_protection();
+    pub fn isr_hypervisor_injection();
+    pub fn isr_vmm_communication();
+    pub fn isr_security_exception();
 }
 
 #[unsafe(no_mangle)]

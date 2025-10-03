@@ -8,13 +8,13 @@ use spin::Mutex;
 
 use crate::drivers::uart::Uart;
 use crate::isa::interface::io::{IReg8Ifce, OReg8Ifce};
-use crate::isa::io::{self, IoReg8};
+use crate::isa::io::{self, Reg8};
 use crate::klib::io::Read;
 
 #[cfg(target_arch = "x86_64")]
 lazy_static! {
     pub static ref LOG_PORT: Mutex<Uart16550> =
-        Mutex::new(Uart16550::try_new(io::IoReg8::IoPort(COM1)).unwrap());
+        Mutex::new(Uart16550::try_new(io::Reg8::IoPort(COM1)).unwrap());
 }
 
 /*
@@ -44,7 +44,7 @@ static COM8: u16 = 0x4e8;
 #[derive(Copy, Clone, Debug)]
 #[repr(transparent)]
 pub struct Uart16550 {
-    base: IoReg8,
+    base: Reg8,
 }
 #[derive(Debug, Clone, Copy)]
 pub enum Error {
@@ -69,7 +69,7 @@ impl Uart16550 {
 impl Uart for Uart16550 {
     type Error = Error;
 
-    fn try_new(base: IoReg8) -> Result<Self, Error> {
+    fn try_new(base: Reg8) -> Result<Self, Error> {
         let port = Uart16550 {
             base: base,
         };

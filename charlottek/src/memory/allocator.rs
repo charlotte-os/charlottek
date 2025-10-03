@@ -7,7 +7,7 @@ use super::PHYSICAL_FRAME_ALLOCATOR;
 use super::vmem::{MemoryMapping, VAddr};
 use crate::isa::interface::memory::address::VirtualAddress;
 use crate::isa::interface::memory::{AddressSpaceInterface, MemoryIfce};
-use crate::isa::memory::MemoryIfceImpl;
+use crate::isa::memory::Memory;
 use crate::isa::memory::address::VADDR_SIG_BITS;
 use crate::isa::memory::paging::{AddressSpace, PAGE_SIZE};
 
@@ -26,7 +26,7 @@ pub static mut KERNEL_ALLOCATOR: Talck<RawSpinlock, ErrOnOom> =
 const KERNEL_HEAP_PAGE_COUNT: usize = 8192; // 32 MiB kernel heap size
 
 pub fn init_allocator() -> Result<(), ()> {
-    let kernel_heap_start = <MemoryIfceImpl as MemoryIfce>::AddressSpace::get_current()
+    let kernel_heap_start = <Memory as MemoryIfce>::AddressSpace::get_current()
         .find_free_region(KERNEL_HEAP_PAGE_COUNT, (*HIGHER_HALF_START, *HIGHER_HALF_END))
         .expect("Failed to find free region for kernel heap");
     let kernel_heap_size = KERNEL_HEAP_PAGE_COUNT * PAGE_SIZE;

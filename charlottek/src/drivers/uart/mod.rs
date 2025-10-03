@@ -8,9 +8,9 @@ pub mod ns16550;
 use core::fmt::Write;
 use core::marker::Sized;
 
-use crate::isa::io::IoReg8;
+use crate::isa::io::Reg8;
 
 pub trait Uart: Write + Sized {
     type Error: Sized;
-    fn try_new(base: IoReg8) -> Result<Self, Self::Error>;
+    fn try_new(base: Reg8) -> Result<Self, Self::Error>;
 }

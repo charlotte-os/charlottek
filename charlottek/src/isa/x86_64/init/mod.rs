@@ -9,9 +9,9 @@ use crate::logln;
 
 const INTERRUPT_STACK_SIZE: usize = PAGE_SIZE * 4;
 
-pub struct IsaInitializer;
+pub struct Init;
 
-impl InitIfce for IsaInitializer {
+impl InitIfce for Init {
     type Error = core::convert::Infallible;
 
     fn init_bsp() -> Result<(), Self::Error> {

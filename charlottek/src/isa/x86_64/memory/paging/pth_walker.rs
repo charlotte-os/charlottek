@@ -39,36 +39,34 @@ impl<'vas> PthWalker<'vas> {
         }
     }
 
-    pub fn walk(
-        &mut self,
-    ) -> Result<(), <super::MemoryIfceImpl as super::MemoryIfce>::Error> {
+    pub fn walk(&mut self) -> Result<(), <super::Memory as super::MemoryIfce>::Error> {
         self.pml4_ptr =
             PAddr::try_from((self.address_space.cr3 & CR3_ADDRESS_MASK) as usize).unwrap().into();
         self.pdpt_ptr = unsafe {
             let pml4e = &mut (*self.pml4_ptr)[self.vaddr.pml4_index()];
             if !pml4e.is_present() {
-                return Err(<super::MemoryIfceImpl as MemoryIfce>::Error::Unmapped);
+                return Err(<super::Memory as MemoryIfce>::Error::Unmapped);
             }
             pml4e.try_get_frame().unwrap().into()
         };
         self.pd_ptr = unsafe {
             let pdpte = &mut (*self.pdpt_ptr)[self.vaddr.pdpt_index()];
             if !pdpte.is_present() {
-                return Err(<super::MemoryIfceImpl as MemoryIfce>::Error::Unmapped);
+                return Err(<super::Memory as MemoryIfce>::Error::Unmapped);
             }
             pdpte.try_get_frame().unwrap().into()
         };
         self.pt_ptr = unsafe {
             let pde = &mut (*self.pd_ptr)[self.vaddr.pd_index()];
             if !pde.is_present() {
-                return Err(<super::MemoryIfceImpl as MemoryIfce>::Error::Unmapped);
+                return Err(<super::Memory as MemoryIfce>::Error::Unmapped);
             }
             pde.try_get_frame().unwrap().into()
         };
         self.page_frame_ptr = unsafe {
             let pte = &mut (*self.pt_ptr)[self.vaddr.pt_index()];
             if !pte.is_present() {
-                return Err(<super::MemoryIfceImpl as MemoryIfce>::Error::Unmapped);
+                return Err(<super::Memory as MemoryIfce>::Error::Unmapped);
             }
             pte.try_get_frame().unwrap().into()
         };
@@ -82,10 +80,10 @@ impl<'vas> PthWalker<'vas> {
         writable: bool,
         user_accessible: bool,
         no_execute: bool,
-    ) -> Result<(), <super::MemoryIfceImpl as MemoryIfce>::Error> {
+    ) -> Result<(), <super::Memory as MemoryIfce>::Error> {
         match self.walk() {
-            Ok(_) => Err(<super::MemoryIfceImpl as MemoryIfce>::Error::AlreadyMapped),
-            Err(<super::MemoryIfceImpl as MemoryIfce>::Error::Unmapped) => {
+            Ok(_) => Err(<super::Memory as MemoryIfce>::Error::AlreadyMapped),
+            Err(<super::Memory as MemoryIfce>::Error::Unmapped) => {
                 if self.pml4_ptr.is_null() {
                     // Obtain the PML4 table pointer; all address spaces must have a top level page
                     // table as they are all required to map the kernel and
@@ -179,9 +177,7 @@ impl<'vas> PthWalker<'vas> {
         }
     }
 
-    pub fn unmap_page(
-        &mut self,
-    ) -> Result<PAddr, <super::MemoryIfceImpl as MemoryIfce>::Error> {
+    pub fn unmap_page(&mut self) -> Result<PAddr, <super::Memory as MemoryIfce>::Error> {
         match self.walk() {
             Ok(_) => {
                 unsafe {
