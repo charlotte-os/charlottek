@@ -3,6 +3,7 @@ mod bsp;
 pub mod gdt;
 
 use crate::cpu::isa::interface::init::InitIfce;
+use crate::cpu::isa::interface::lp::LpIfce;
 use crate::cpu::isa::lp::LogicalProcessor;
 use crate::cpu::isa::memory::paging::PAGE_SIZE;
 use crate::logln;
@@ -15,7 +16,7 @@ impl InitIfce for Init {
     type Error = core::convert::Infallible;
 
     fn init_bsp() -> Result<(), Self::Error> {
-        let lp_id = LogicalProcessor::get_lp_id();
+        let lp_id = LogicalProcessor::read_lp_id();
         logln!("LP{}: Starting x86-64 bootstrap processor initialization", lp_id);
         // Initialize TSS, GDT, and IDT
         bsp::init_bsp();
@@ -25,7 +26,7 @@ impl InitIfce for Init {
     }
 
     fn init_ap() -> Result<(), Self::Error> {
-        let lp_id = LogicalProcessor::get_lp_id();
+        let lp_id = LogicalProcessor::read_lp_id();
         logln!("LP{}: Starting x86-64 application processor initialization", lp_id);
         // Initialize TSS, GDT, and IDT
         ap::init_ap();

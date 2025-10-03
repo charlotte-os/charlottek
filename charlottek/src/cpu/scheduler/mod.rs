@@ -5,18 +5,18 @@ use alloc::collections::vec_deque::VecDeque;
 use alloc::vec::Vec;
 
 use hashbrown::HashSet;
+use lp_local::LpScheduler;
 use spin::{Lazy, Mutex, RwLock};
 
-use crate::cpu::threads::{Thread, ThreadId};
-use crate::cpu::isa::lp::LogicalProcessor;
-use crate::memory::AddressSpaceId;
+use crate::cpu::isa::lp::{LogicalProcessor, LpIfce};
+use crate::cpu::threads::ThreadId;
 
 pub static GLOBAL_SCHEDULER: Lazy<GlobalScheduler> = Lazy::new(GlobalScheduler::new);
 
 pub struct GlobalScheduler {
     blocked_threads: RwLock<HashSet<ThreadId>>,
     ready_unassigned: Mutex<VecDeque<ThreadId>>,
-    lp_schedulers: Vec<Mutex<LpScheduler>>,
+    lp_schedulers: Vec<Mutex<Box<dyn LpScheduler>>>,
 }
 
 impl GlobalScheduler {
@@ -29,13 +29,8 @@ impl GlobalScheduler {
     }
 
     pub fn get_local_lp_scheduler(&self) -> &Mutex<Box<dyn LpScheduler>> {
-        &self.lp_schedulers[LogicalProcessor::get_lp_id() as usize]
+        &self.lp_schedulers[LogicalProcessor::read_lp_id() as usize]
     }
 }
 
-unsafe impl Sync for GlobalScheduler {}
-
-enum LpScheduler {
-    SimpleRr(SimpleRr),
-    Darr(Darr),
-}
+unsafe impl Send for GlobalScheduler {}

@@ -32,7 +32,7 @@ pub mod environment;
 pub mod event;
 pub mod framebuffer;
 pub mod init;
-pub mod klib;
+pub mod lib;
 pub mod log;
 pub mod memory;
 pub mod panic;
@@ -92,6 +92,6 @@ pub unsafe extern "C" fn ap_main(_cpuinfo: &Cpu) -> ! {
     }
     init::ap_init();
     INIT_BARRIER.wait();
-    logln!("LP{}: Nothing left to do. Waiting for interrupts...", (LogicalProcessor::get_lp_id()));
+    logln!("LP{}: Nothing left to do. Waiting for interrupts...", (LogicalProcessor::read_lp_id()));
     LogicalProcessor::halt()
 }

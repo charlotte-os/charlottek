@@ -45,16 +45,16 @@ pub fn start_secondary_lps() -> Result<(), MpError> {
 
 use core::sync::atomic::{AtomicU32, Ordering};
 
-use crate::cpu::isa::lp::LogicalProcessor;
+use crate::cpu::isa::lp::{LogicalProcessor, LpIfce};
 
 pub static ID_COUNTER: AtomicU32 = AtomicU32::new(0);
 
 pub unsafe fn assign_id() {
     let lp_id = ID_COUNTER.fetch_add(1, Ordering::SeqCst);
-    LogicalProcessor::store_lp_id(lp_id);
+    LogicalProcessor::write_lp_id(lp_id);
     logln!(
         "Logical Processor with local interrupt controller ID = {} has been designated LP{}.",
-        (LogicalProcessor::get_lic_id()),
-        (LogicalProcessor::get_lp_id())
+        (LogicalProcessor::read_lic_id()),
+        (LogicalProcessor::read_lp_id())
     );
 }

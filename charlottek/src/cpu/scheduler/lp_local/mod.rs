@@ -3,11 +3,13 @@ mod simple_rr;
 
 use alloc::vec::Vec;
 
+use crate::cpu::isa::lp::{LogicalProcessor, LpIfce};
 use crate::cpu::threads::{Thread, ThreadId};
-use crate::cpu::isa::lp::LogicalProcessor;
 use crate::memory::AddressSpaceId;
 
-pub trait LpScheduler {
+type HwAsid = <LogicalProcessor as LpIfce>::HwAsid;
+
+pub trait LpScheduler: Send {
     extern "C" fn advance(&self);
 
     fn assign_ready(&mut self, thread: Thread);
@@ -18,7 +20,7 @@ pub trait LpScheduler {
 
     fn abort_as_threads(&mut self, asid: AddressSpaceId);
 
-    fn asid_to_hw_asid(&self, asid: AddressSpaceId) -> Option<LogicalProcessor::HwAsid>;
+    fn asid_to_hw_asid(&self, asid: AddressSpaceId) -> Option<HwAsid>;
 
-    fn hw_asid_to_asid(&self, hw_asid: LogicalProcessor::HwAsid) -> Option<AddressSpaceId>;
+    fn hw_asid_to_asid(&self, hw_asid: HwAsid) -> Option<AddressSpaceId>;
 }

@@ -1,17 +1,18 @@
 use core::arch::asm;
 
-use crate::cpu::scheduler::GLOBAL_SCHEDULER;
+use crate::cpu::isa::lp::Pcid;
 use crate::cpu::isa::memory::paging::PAGE_SIZE;
+use crate::cpu::scheduler::GLOBAL_SCHEDULER;
 use crate::memory::{AddressSpaceId, VAddr};
 
 pub fn inval_range_user(asid: AddressSpaceId, base: VAddr, size: usize) {
     // SAFETY: This is safe because we are executing in an interrupt context where
     // preemption is disabled, and we are not modifying any data structures that
     // could be accessed by other threads.
-    if let Some(pcid) = GLOBAL_SCHEDULER.get_local_lp_scheduler().lock().asid_to_pcid(asid) {
+    if let Some(pcid) = GLOBAL_SCHEDULER.get_local_lp_scheduler().lock().asid_to_hw_asid(asid) {
         let raw_base = <VAddr as Into<usize>>::into(base);
         for page in (raw_base..raw_base + size * PAGE_SIZE).step_by(PAGE_SIZE) {
-            let descriptor: [u64; 2] = [page as u64, pcid as u64];
+            let descriptor: [u64; 2] = [page as u64, <Pcid as Into<u16>>::into(pcid) as u64];
             unsafe {
                 asm!(
                     "invpcid {mode:r}, [{desc_ptr}]",
@@ -28,8 +29,8 @@ pub fn inval_asid(asid: AddressSpaceId) {
     // SAFETY: This is safe because we are executing in an interrupt context where
     // preemption is disabled, and we are not modifying any data structures that
     // could be accessed by other threads.
-    if let Some(pcid) = GLOBAL_SCHEDULER.get_local_lp_scheduler().lock().asid_to_pcid(asid) {
-        let descriptor: [u64; 2] = [0, pcid as u64];
+    if let Some(pcid) = GLOBAL_SCHEDULER.get_local_lp_scheduler().lock().asid_to_hw_asid(asid) {
+        let descriptor: [u64; 2] = [0, <Pcid as Into<u16>>::into(pcid) as u64];
         unsafe {
             asm!(
                 "invpcid {mode:r}, [{desc_ptr}]",

@@ -3,7 +3,7 @@ use alloc::boxed::Box;
 use spin::{Lazy, RwLock};
 
 use crate::cpu::isa::lp::thread_context::ThreadContext;
-use crate::klib::collections::id_table::IdTable;
+use crate::lib::collections::id_table::IdTable;
 
 type ThreadTable = IdTable<ThreadId, Thread>;
 pub type ThreadId = usize;

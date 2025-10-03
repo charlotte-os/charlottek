@@ -1,6 +1,6 @@
 use crate::cpu::isa::init::Init;
 use crate::cpu::isa::interface::init::InitIfce;
-use crate::cpu::isa::lp;
+use crate::cpu::isa::lp::*;
 use crate::logln;
 use crate::memory::PHYSICAL_FRAME_ALLOCATOR;
 
@@ -36,7 +36,7 @@ pub fn bsp_init() {
 }
 
 pub fn ap_init() {
-    let lp_id = lp::LogicalProcessor::get_lp_id();
+    let lp_id = LogicalProcessor::read_lp_id();
     logln!("Initializing LP {}...", lp_id);
     logln!("LP {}: Performing ISA specific initialization...", lp_id);
     match Init::init_ap() {
