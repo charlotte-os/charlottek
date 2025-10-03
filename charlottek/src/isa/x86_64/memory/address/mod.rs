@@ -3,8 +3,8 @@ pub mod vaddr;
 
 use lazy_static::lazy_static;
 
-use crate::isa::interface::system_info::CpuInfoIfce;
-use crate::isa::x86_64::system_info::CpuInfo;
+use crate::isa::interface::cpu_info::CpuInfoIfce;
+use crate::isa::x86_64::cpu_info::CpuInfo;
 
 lazy_static! {
     pub static ref PADDR_SIG_BITS: u8 = CpuInfo::get_paddr_sig_bits();
