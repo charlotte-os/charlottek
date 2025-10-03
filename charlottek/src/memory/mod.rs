@@ -2,7 +2,7 @@ pub mod allocator;
 pub mod pmem;
 pub mod vmem;
 
-pub use pmem::{MemoryInterface, PAddr, PhysicalFrameAllocator};
+pub use pmem::{MemoryIfce, PAddr, PhysicalFrameAllocator};
 pub use spin::{Lazy, Mutex, RwLock};
 pub use vmem::VAddr;
 

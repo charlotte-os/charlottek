@@ -5,9 +5,9 @@ use core::arch::asm;
 use core::iter::Iterator;
 use core::ptr::NonNull;
 
-use super::MemoryInterfaceImpl;
+use super::MemoryIfceImpl;
 use super::address::vaddr::VAddr;
-use crate::isa::interface::memory::{AddressSpaceInterface, MemoryInterface, MemoryMapping};
+use crate::isa::interface::memory::{AddressSpaceInterface, MemoryIfce, MemoryMapping};
 use crate::logln;
 use crate::memory::PAddr;
 
@@ -49,7 +49,7 @@ impl AddressSpaceInterface for AddressSpace {
         }
     }
 
-    fn load(&self) -> Result<(), <MemoryInterfaceImpl as MemoryInterface>::Error> {
+    fn load(&self) -> Result<(), <MemoryIfceImpl as MemoryIfce>::Error> {
         unsafe {
             // Set the top level page table base register
             asm!("mov cr3, {}", in(reg) self.cr3);
@@ -62,8 +62,8 @@ impl AddressSpaceInterface for AddressSpace {
         n_pages: usize,
         range: (VAddr, VAddr),
     ) -> Result<
-        <MemoryInterfaceImpl as MemoryInterface>::VAddr,
-        <MemoryInterfaceImpl as MemoryInterface>::Error,
+        <MemoryIfceImpl as MemoryIfce>::VAddr,
+        <MemoryIfceImpl as MemoryIfce>::Error,
     > {
         logln!("Finding free region of {} pages in range {:?}...", n_pages, range);
         let mut page_iter = (range.0..range.1).step_by(PAGE_SIZE);
@@ -73,7 +73,7 @@ impl AddressSpaceInterface for AddressSpace {
                 let curr_page = base + ((nth_page * PAGE_SIZE) as isize);
                 //logln!("Checking page: {:?}", curr_page);
                 if range.1 - curr_page < (n_pages * PAGE_SIZE) as isize {
-                    return Err(<MemoryInterfaceImpl as MemoryInterface>::Error::NoRequestedVAddrRegionAvailable);
+                    return Err(<MemoryIfceImpl as MemoryIfce>::Error::NoRequestedVAddrRegionAvailable);
                 }
                 if self.is_mapped(curr_page)? {
                     match page_iter.advance_by(nth_page) {
@@ -81,7 +81,7 @@ impl AddressSpaceInterface for AddressSpace {
                             logln!("Page {:?} is already mapped, skipping to next base address.", curr_page);
                             break;
                         }
-                        Err(_) => return Err(<MemoryInterfaceImpl as MemoryInterface>::Error::NoRequestedVAddrRegionAvailable),
+                        Err(_) => return Err(<MemoryIfceImpl as MemoryIfce>::Error::NoRequestedVAddrRegionAvailable),
                     }
                 }
                 if nth_page == n_pages - 1 {
@@ -90,13 +90,13 @@ impl AddressSpaceInterface for AddressSpace {
                 }
             }
         }
-        Err(<MemoryInterfaceImpl as MemoryInterface>::Error::NoRequestedVAddrRegionAvailable)
+        Err(<MemoryIfceImpl as MemoryIfce>::Error::NoRequestedVAddrRegionAvailable)
     }
 
     fn map_page(
         &mut self,
         mapping: MemoryMapping,
-    ) -> Result<(), <MemoryInterfaceImpl as MemoryInterface>::Error> {
+    ) -> Result<(), <MemoryIfceImpl as MemoryIfce>::Error> {
         let mut walker = pth_walker::PthWalker::new(self, mapping.vaddr);
         walker.map_page(
             mapping.paddr,
@@ -109,13 +109,13 @@ impl AddressSpaceInterface for AddressSpace {
 
     fn unmap_page(
         &mut self,
-        vaddr: <MemoryInterfaceImpl as MemoryInterface>::VAddr,
-    ) -> Result<PAddr, <MemoryInterfaceImpl as MemoryInterface>::Error> {
+        vaddr: <MemoryIfceImpl as MemoryIfce>::VAddr,
+    ) -> Result<PAddr, <MemoryIfceImpl as MemoryIfce>::Error> {
         if <VAddr as Into<usize>>::into(vaddr) == 0 {
-            return Err(<MemoryInterfaceImpl as MemoryInterface>::Error::NullVAddrNotAllowed);
+            return Err(<MemoryIfceImpl as MemoryIfce>::Error::NullVAddrNotAllowed);
         }
         if vaddr.page_offset() != 0 {
-            return Err(<MemoryInterfaceImpl as MemoryInterface>::Error::VAddrNotPageAligned);
+            return Err(<MemoryIfceImpl as MemoryIfce>::Error::VAddrNotPageAligned);
         }
         let mut walker = pth_walker::PthWalker::new(self, vaddr);
         walker.unmap_page()
@@ -123,12 +123,12 @@ impl AddressSpaceInterface for AddressSpace {
 
     fn is_mapped(
         &mut self,
-        vaddr: <MemoryInterfaceImpl as MemoryInterface>::VAddr,
-    ) -> Result<bool, <MemoryInterfaceImpl as MemoryInterface>::Error> {
+        vaddr: <MemoryIfceImpl as MemoryIfce>::VAddr,
+    ) -> Result<bool, <MemoryIfceImpl as MemoryIfce>::Error> {
         let mut walker = pth_walker::PthWalker::new(self, vaddr);
         match walker.walk() {
             Ok(_) => Ok(true),
-            Err(<MemoryInterfaceImpl as MemoryInterface>::Error::Unmapped) => Ok(false),
+            Err(<MemoryIfceImpl as MemoryIfce>::Error::Unmapped) => Ok(false),
             Err(e) => Err(e),
         }
     }
@@ -136,7 +136,7 @@ impl AddressSpaceInterface for AddressSpace {
     fn translate_address(
         &mut self,
         vaddr: super::address::vaddr::VAddr,
-    ) -> Result<super::address::paddr::PAddr, <MemoryInterfaceImpl as MemoryInterface>::Error> {
+    ) -> Result<super::address::paddr::PAddr, <MemoryIfceImpl as MemoryIfce>::Error> {
         let mut walker = pth_walker::PthWalker::new(self, vaddr);
         walker.walk()?;
         let paddr = unsafe { (*(walker.pt_ptr))[vaddr.pt_index()].try_get_frame()?.into() };

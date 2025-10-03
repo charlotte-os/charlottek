@@ -1,8 +1,9 @@
-use crate::isa::lp;
-pub trait InterruptManagerIfce {
+use crate::isa::interface::lp::LpIfce;
+use crate::isa::lp::LogicalProcessor;
+pub trait InterruptIfce {
     type Error;
     type Ipi;
 
     fn init_interrupt_structures() -> Result<(), Self::Error>;
-    fn send_ipi(lp_list: &[LpControl::LpId], ipi: Self::Ipi);
+    fn send_ipi(lp_list: &[<LogicalProcessor as LpIfce>::LpId], ipi: Self::Ipi);
 }

@@ -1,6 +1,6 @@
 ///! # Interface for ISA specific initialization
 
-pub trait InitInterface {
+pub trait InitIfce {
     type Error: core::fmt::Debug;
     /// Perform ISA specific processor and system initialization
     fn init_bsp() -> Result<(), Self::Error>;

@@ -5,10 +5,10 @@
 
 pub use limine::response::MemoryMapResponse;
 
-pub use crate::isa::interface::memory::MemoryInterface;
+pub use crate::isa::interface::memory::MemoryIfce;
 use crate::isa::interface::memory::address::Address;
 pub use crate::isa::interface::memory::address::PhysicalAddress;
-pub use crate::isa::memory::MemoryInterfaceImpl;
+pub use crate::isa::memory::MemoryIfceImpl;
 pub use crate::isa::memory::address::paddr::{PAddr, PAddrError};
 use crate::logln;
 

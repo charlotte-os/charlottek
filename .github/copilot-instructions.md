@@ -16,7 +16,7 @@ Concise, action-focused context to make high-quality changes rapidly. Keep respo
 - `scheduler/` – Early scaffolding (global/local schedulers, simple RR in `local/simple_rr.rs`). Not fully integrated yet—treat as experimental.
 - `framebuffer/` – Text/console rendering over UEFI GOP-provided framebuffer; `console.rs` likely central abstraction (scan before extending output paths).
 - `log/` – Logging macro(s) (e.g., `logln!`) used pervasively; prefer integrating with existing logging rather than ad-hoc UART writes.
-- `panic.rs` – Minimal panic handler logs and halts via `LpControl::halt()`.
+- `panic.rs` – Minimal panic handler logs and halts via `LogicalProcessor::halt()`.
 
 ## 3. Conventions & Patterns
 - Use Intel syntax for x86_64 assembly (per README); keep arch-specific asm within the respective ISA tree.
@@ -47,7 +47,7 @@ Concise, action-focused context to make high-quality changes rapidly. Keep respo
 - Cross-ISA additions: mirror directory structure (`init/`, `interrupts/`, `memory/`, etc.) for consistency.
 
 ## 7. Error Handling & Halting
-- Kernel frequently halts on unrecoverable errors via `LpControl::halt()`; maintainers prefer explicit expect messages for now (early stage). Provide clear context in `expect()` strings.
+- Kernel frequently halts on unrecoverable errors via `LogicalProcessor::halt()`; maintainers prefer explicit expect messages for now (early stage). Provide clear context in `expect()` strings.
 
 ## 8. Style & Stability Constraints
 - Nightly Rust features already enabled; before adding more `#![feature]` gates, justify necessity in PR description.

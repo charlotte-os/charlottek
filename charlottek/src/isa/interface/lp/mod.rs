@@ -1,6 +1,6 @@
 //! # Logical Processor Control Interface
 
-pub trait LpControlIfce {
+pub trait LpIfce {
     type LicId;
     type LpId;
 

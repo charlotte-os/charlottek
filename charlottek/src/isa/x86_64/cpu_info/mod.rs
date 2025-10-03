@@ -3,7 +3,7 @@ use alloc::vec::Vec;
 use core::arch::x86_64::__cpuid_count;
 use core::mem::transmute;
 
-use crate::isa::interface::system_info::CpuInfoIfce;
+use crate::isa::interface::cpu_info::CpuInfoIfce;
 
 pub enum IsaExtension {
     /* indicates support for 5-level paging i.e. 57 bit linear addresses */
@@ -56,10 +56,7 @@ impl CpuInfoIfce for CpuInfo {
             // Convert the byte vector to a String, assuming it is valid UTF-8
             // Note: This is safe because the cpuid results are guaranteed to be valid UTF-8
             // as per the AMD64 Architecture Programmer's Manual.
-            String::from_utf8(utf8)
-                .unwrap()
-                .trim_end_matches("\0")
-                .into()
+            String::from_utf8(utf8).unwrap().trim_end_matches("\0").into()
         }
     }
 

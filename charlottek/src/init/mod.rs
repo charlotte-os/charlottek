@@ -1,5 +1,5 @@
 use crate::isa::init::IsaInitializer;
-use crate::isa::interface::init::InitInterface;
+use crate::isa::interface::init::InitIfce;
 use crate::isa::lp;
 use crate::logln;
 use crate::memory::PHYSICAL_FRAME_ALLOCATOR;
@@ -36,7 +36,7 @@ pub fn bsp_init() {
 }
 
 pub fn ap_init() {
-    let lp_id = lp::LpControl::get_lp_id();
+    let lp_id = lp::LogicalProcessor::get_lp_id();
     logln!("Initializing LP {}...", lp_id);
     logln!("LP {}: Performing ISA specific initialization...", lp_id);
     match IsaInitializer::init_ap() {

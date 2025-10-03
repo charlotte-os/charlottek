@@ -4,9 +4,9 @@ use crate::isa::interface::lp::LpControlIfce;
 
 pub mod thread_context;
 
-pub struct LpControl;
+pub struct LogicalProcessor;
 
-impl LpControlIfce for LpControl {
+impl LpControlIfce for LogicalProcessor {
     // MSR 0x802 value
     type LicId = u32;
     // TSC_AUX value

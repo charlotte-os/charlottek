@@ -2,7 +2,7 @@ pub mod address;
 pub mod paging;
 pub mod tlb;
 
-pub use crate::isa::interface::memory::MemoryInterface;
+pub use crate::isa::interface::memory::MemoryIfce;
 use crate::isa::memory::address::paddr::PAddrError;
 use crate::memory::pmem::Error as PMemError;
 use crate::memory::vmem::Error as VMemError;
@@ -36,9 +36,9 @@ impl From<VMemError> for Error {
     }
 }
 
-pub struct MemoryInterfaceImpl;
+pub struct MemoryIfceImpl;
 
-impl MemoryInterface for MemoryInterfaceImpl {
+impl MemoryIfce for MemoryIfceImpl {
     type AddressSpace = paging::AddressSpace;
     type Error = Error;
     type HwAsid = u16;
