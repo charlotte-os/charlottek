@@ -11,6 +11,7 @@ pub mod lp;
 pub mod memory;
 
 pub struct X86_64;
+
 impl crate::isa::interface::IsaIfce for X86_64 {
     type CpuInfoIfce = cpu_info::CpuInfo;
     type InitIfce = init::Init;
