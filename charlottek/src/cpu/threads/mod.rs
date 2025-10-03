@@ -2,7 +2,7 @@ use alloc::boxed::Box;
 
 use spin::{Lazy, RwLock};
 
-use crate::isa::lp::thread_context::ThreadContext;
+use crate::cpu::isa::lp::thread_context::ThreadContext;
 use crate::klib::collections::id_table::IdTable;
 
 type ThreadTable = IdTable<ThreadId, Thread>;

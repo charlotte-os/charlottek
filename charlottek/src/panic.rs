@@ -1,6 +1,6 @@
 use core::panic::PanicInfo;
 
-use crate::isa::lp::LogicalProcessor;
+use crate::cpu::isa::lp::LogicalProcessor;
 use crate::logln;
 
 #[panic_handler]

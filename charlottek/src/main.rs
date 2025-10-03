@@ -32,17 +32,16 @@ pub mod environment;
 pub mod event;
 pub mod framebuffer;
 pub mod init;
-pub mod isa;
 pub mod klib;
 pub mod log;
 pub mod memory;
 pub mod panic;
 pub mod self_test;
 
+use cpu::isa::cpu_info::CpuInfo;
+use cpu::isa::interface::cpu_info::CpuInfoIfce;
+use cpu::isa::lp::LogicalProcessor;
 use cpu::multiprocessor;
-use isa::cpu_info::CpuInfo;
-use isa::interface::cpu_info::CpuInfoIfce;
-use isa::lp::LogicalProcessor;
 use limine::mp::Cpu;
 use spin::{Barrier, Lazy};
 

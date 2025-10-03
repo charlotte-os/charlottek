@@ -5,11 +5,11 @@ use talc::{ErrOnOom, Span, Talc, Talck};
 
 use super::PHYSICAL_FRAME_ALLOCATOR;
 use super::vmem::{MemoryMapping, VAddr};
-use crate::isa::interface::memory::address::VirtualAddress;
-use crate::isa::interface::memory::{AddressSpaceInterface, MemoryIfce};
-use crate::isa::memory::Memory;
-use crate::isa::memory::address::VADDR_SIG_BITS;
-use crate::isa::memory::paging::{AddressSpace, PAGE_SIZE};
+use crate::cpu::isa::interface::memory::address::VirtualAddress;
+use crate::cpu::isa::interface::memory::{AddressSpaceInterface, MemoryIfce};
+use crate::cpu::isa::memory::Memory;
+use crate::cpu::isa::memory::address::VADDR_SIG_BITS;
+use crate::cpu::isa::memory::paging::{AddressSpace, PAGE_SIZE};
 
 lazy_static! {
     pub static ref ALLOCATOR_SPAN: Mutex<Span> = Mutex::new(Span::empty());

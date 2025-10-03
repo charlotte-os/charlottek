@@ -4,7 +4,7 @@ mod simple_rr;
 use alloc::vec::Vec;
 
 use crate::cpu::threads::{Thread, ThreadId};
-use crate::isa::lp::LogicalProcessor;
+use crate::cpu::isa::lp::LogicalProcessor;
 use crate::memory::AddressSpaceId;
 
 pub trait LpScheduler {

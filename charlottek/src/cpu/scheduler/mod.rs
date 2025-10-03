@@ -8,7 +8,7 @@ use hashbrown::HashSet;
 use spin::{Lazy, Mutex, RwLock};
 
 use crate::cpu::threads::{Thread, ThreadId};
-use crate::isa::lp::LogicalProcessor;
+use crate::cpu::isa::lp::LogicalProcessor;
 use crate::memory::AddressSpaceId;
 
 pub static GLOBAL_SCHEDULER: Lazy<GlobalScheduler> = Lazy::new(GlobalScheduler::new);
